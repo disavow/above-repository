@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+
+unless ARGV.length == 1
+  puts "Usage: ./generate-commits <n> (for n <= 100)"
+  exit
+end
+
+number_of_commits = ARGV[0].to_i <= 100 ? ARGV[0].to_i : 100
+id = Time.now.to_i
+
+`git checkout -b contrib/#{id}`
+number_of_commits.times do |i|
+  `echo -n '.' >> contrib/#{id}.txt`
+  `git add contrib/#{id}.txt`
+  `git commit -m "Adding #{id}: #{i}"`
+end
+
+system 'git show'
+puts "Ready to push #{number_of_commits} commits. Run:"
+puts "git push origin contrib/#{id}"
+puts "and open a pull request"
